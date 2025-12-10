@@ -1,3 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Organizador</title>
+
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+</head>
+<body>
+
+<h1>Organizador de Nomes e Valores</h1>
+
+<p><b>Nomes (separados por espaço):</b></p>
+<input id="nomes" type="text">
+
+<p><b>Valores (separados por espaço):</b></p>
+<input id="valores" type="text">
+
+<br><br>
+<button onclick="organizar()">Organizar</button>
+
+<h2>Resultado:</h2>
+<pre id="saida">Nenhum dado ainda.</pre>
+
 <script type="py-script">
 from pyscript import js
 
@@ -30,4 +55,10 @@ def organizar():
         texto += f"{nome:<20} {valor:>10}\n"
 
     saida.innerText = texto
+
+# registra a função para ser acessível pelo botão JS
+js.organizar = organizar
 </script>
+
+</body>
+</html>
