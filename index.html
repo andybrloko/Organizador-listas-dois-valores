@@ -2,97 +2,80 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Organizador</title>
-
-    <!-- PyScript -->
-    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
-    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
-
+    <title>Lista de Nomes e Valores</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            padding: 20px;
-            background: #f4f4f4;
+            margin: 30px;
         }
-        input {
-            width: 300px;
-            padding: 6px;
-        }
-        pre {
-            background: #fff;
-            padding: 10px;
-            border-radius: 8px;
+        table {
+            border-collapse: collapse;
+            width: 350px;
             margin-top: 20px;
-            white-space: pre-wrap;
         }
-        button {
-            padding: 10px 20px;
-            cursor: pointer;
-            margin-top: 10px;
+        td, th {
+            border: 1px solid #444;
+            padding: 8px;
+        }
+        th {
+            background-color: #ddd;
         }
     </style>
 </head>
 <body>
 
-<h1>Organizador de Nomes e Valores</h1>
+    <h2>Adicionar nomes e valores</h2>
 
-<p><b>Nomes (separados por espaço):</b></p>
-<input id="nomes" type="text">
+    <label>Quais nomes você deseja adicionar à lista?</label><br>
+    <input id="nomes" type="text" placeholder="Ex: Ana João Pedro"><br><br>
 
-<p><b>Valores (separados por espaço):</b></p>
-<input id="valores" type="text">
+    <label>Quais valores você deseja adicionar à lista?</label><br>
+    <input id="valores" type="text" placeholder="Ex: 10 50 30"><br><br>
 
-<br><br>
+    <button onclick="processar()">Enviar</button>
 
-<!-- BOTÃO CORRETO -->
-<button py-click="organizar">Organizar</button>
+    <div id="resultado"></div>
 
-<h2>Resultado:</h2>
-<pre id="saida">Nenhum dado ainda.</pre>
+    <script>
+        function processar() {
+            let nomes = document.getElementById("nomes").value.split(" ");
+            let valores = document.getElementById("valores").value.split(" ");
 
+            let resultado = document.getElementById("resultado");
 
-<!-- CÓDIGO PYTHON CORRETO -->
-<script type="py-script">
-from pyscript import js
+            if (nomes[0] === "") {
+                resultado.innerHTML = "<p>não há nada na lista de nomes</p>";
+                return;
+            }
 
-def organizar(event=None):
-    # Ler os inputs
-    nomes_raw = js.document.getElementById("nomes").value
-    valores_raw = js.document.getElementById("valores").value
+            if (valores[0] === "") {
+                resultado.innerHTML = "<p>não há nada na lista de valores</p>";
+                return;
+            }
 
-    nomes = nomes_raw.split()
-    valores = valores_raw.split()
+            // Cria dicionário equivalente ao Python zip()
+            let dados = {};
+            for (let i = 0; i < nomes.length; i++) {
+                dados[nomes[i]] = valores[i] ?? "0";
+            }
 
-    saida = js.document.getElementById("saida")
+            // Ordena do maior para o menor valor
+            let ordenado = Object.entries(dados).sort((a, b) => b[1] - a[1]);
 
-    # Verifica campos vazios
-    if not nomes or not valores:
-        saida.innerText = "Erro: Preencha os dois campos!"
-        return
+            let html = `
+                <table>
+                    <tr><th>Nome</th><th>Valor</th></tr>
+            `;
 
-    # Converter valores para número
-    try:
-        valores = [float(v) for v in valores]
-    except:
-        saida.innerText = "Erro: Os valores devem ser números!"
-        return
+            ordenado.forEach(([nome, valor]) => {
+                html += `<tr><td>${nome}</td><td>${valor}</td></tr>`;
+            });
 
-    # Associar nomes e valores
-    dados = dict(zip(nomes, valores))
+            html += "</table>";
 
-    # Ordenar
-    ordenado = sorted(dados.items(), key=lambda x: x[1], reverse=True)
-
-    # Montar texto
-    texto = "Nome                     Valor\n"
-    texto += "--------------------------------\n"
-
-    for nome, valor in ordenado:
-        texto += f"{nome:<20} {valor:>10}\n"
-
-    # Mostrar na página
-    saida.innerText = texto
-</script>
+            resultado.innerHTML = html;
+        }
+    </script>
 
 </body>
 </html>
