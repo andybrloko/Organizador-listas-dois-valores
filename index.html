@@ -18,31 +18,27 @@
 <input id="valores" type="text">
 
 <br><br>
-<button onclick="organizar()">Organizar</button>
+<button py-click="organizar()">Organizar</button>
 
 <h2>Resultado:</h2>
 <pre id="saida">Nenhum dado ainda.</pre>
 
-<script type="py-script">
-from pyscript import js
-
+<py-script>
 def organizar():
-    nomes_raw = js.document.getElementById("nomes").value
-    valores_raw = js.document.getElementById("valores").value
+    nomes_raw = Element("nomes").value
+    valores_raw = Element("valores").value
 
     nomes = nomes_raw.split()
     valores = valores_raw.split()
 
-    saida = js.document.getElementById("saida")
-
     if not nomes or not valores:
-        saida.innerText = "Erro: Preencha os dois campos!"
+        Element("saida").write("Erro: Preencha os dois campos!")
         return
 
     try:
         valores = [float(v) for v in valores]
     except:
-        saida.innerText = "Erro: Os valores devem ser números!"
+        Element("saida").write("Erro: Os valores devem ser números!")
         return
 
     dados = dict(zip(nomes, valores))
@@ -54,11 +50,8 @@ def organizar():
     for nome, valor in ordenado:
         texto += f"{nome:<20} {valor:>10}\n"
 
-    saida.innerText = texto
-
-# registra a função para ser acessível pelo botão JS
-js.organizar = organizar
-</script>
+    Element("saida").write(texto)
+</py-script>
 
 </body>
 </html>
