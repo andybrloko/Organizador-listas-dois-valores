@@ -4,8 +4,33 @@
     <meta charset="UTF-8">
     <title>Organizador</title>
 
+    <!-- PyScript -->
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f4f4f4;
+        }
+        input {
+            width: 300px;
+            padding: 6px;
+        }
+        pre {
+            background: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
+        button {
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
 
@@ -18,40 +43,56 @@
 <input id="valores" type="text">
 
 <br><br>
-<button py-click="organizar()">Organizar</button>
+
+<!-- BOTÃO CORRETO -->
+<button py-click="organizar">Organizar</button>
 
 <h2>Resultado:</h2>
 <pre id="saida">Nenhum dado ainda.</pre>
 
-<py-script>
-def organizar():
-    nomes_raw = Element("nomes").value
-    valores_raw = Element("valores").value
+
+<!-- CÓDIGO PYTHON CORRETO -->
+<script type="py-script">
+from pyscript import js
+
+def organizar(event=None):
+    # Ler os inputs
+    nomes_raw = js.document.getElementById("nomes").value
+    valores_raw = js.document.getElementById("valores").value
 
     nomes = nomes_raw.split()
     valores = valores_raw.split()
 
+    saida = js.document.getElementById("saida")
+
+    # Verifica campos vazios
     if not nomes or not valores:
-        Element("saida").write("Erro: Preencha os dois campos!")
+        saida.innerText = "Erro: Preencha os dois campos!"
         return
 
+    # Converter valores para número
     try:
         valores = [float(v) for v in valores]
     except:
-        Element("saida").write("Erro: Os valores devem ser números!")
+        saida.innerText = "Erro: Os valores devem ser números!"
         return
 
+    # Associar nomes e valores
     dados = dict(zip(nomes, valores))
+
+    # Ordenar
     ordenado = sorted(dados.items(), key=lambda x: x[1], reverse=True)
 
+    # Montar texto
     texto = "Nome                     Valor\n"
     texto += "--------------------------------\n"
 
     for nome, valor in ordenado:
         texto += f"{nome:<20} {valor:>10}\n"
 
-    Element("saida").write(texto)
-</py-script>
+    # Mostrar na página
+    saida.innerText = texto
+</script>
 
 </body>
 </html>
