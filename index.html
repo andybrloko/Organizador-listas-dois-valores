@@ -1,8 +1,7 @@
-<py-script>
+<script type="py-script">
 from pyscript import js
 
 def organizar():
-    # pegar elementos pelo document
     nomes_raw = js.document.getElementById("nomes").value
     valores_raw = js.document.getElementById("valores").value
 
@@ -15,7 +14,6 @@ def organizar():
         saida.innerText = "Erro: Preencha os dois campos!"
         return
 
-    # converter valores
     try:
         valores = [float(v) for v in valores]
     except:
@@ -23,7 +21,6 @@ def organizar():
         return
 
     dados = dict(zip(nomes, valores))
-
     ordenado = sorted(dados.items(), key=lambda x: x[1], reverse=True)
 
     texto = "Nome                     Valor\n"
@@ -33,4 +30,4 @@ def organizar():
         texto += f"{nome:<20} {valor:>10}\n"
 
     saida.innerText = texto
-</py-script>
+</script>
